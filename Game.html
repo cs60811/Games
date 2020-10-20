@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="團康遊戲!">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DinDonC - 一起來訂東西吧</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<style>
+	.align-center {
+		width: 100%;
+		text-align: center;
+		font-size: 18pt;
+	}
+	</style>
+    
+  </head>
+  <body>
+
+
+    <div id="app" class="container">
+		<el-row>
+		
+		  <el-col :span="24">
+			  <div class="align-center">
+				救救菜英文
+			  </div>
+		  </el-col>
+		</el-row>
+		<el-col :span="24">
+			  <div class="align-center" style="font-size: 60pt;width: auto;height: 140px;">
+				{{Topic}}
+			  </div>
+		  </el-col>
+		</el-row>
+		<el-col :span="24">
+			請設定時間 : <el-input v-model="TotalTime" placeholder="请输入内容"></el-input>
+		</el-row>
+		<el-col :span="24">
+			  <div>
+				倒數計時 : {{time}}
+			  </div>
+		  </el-col>
+		</el-row>
+		<el-col :span="24">
+			  <div>
+				<el-button type="success" round @click="StartTimer">開始</el-button>
+				<el-button type="success" round @click="PauseTimer">暫停</el-button>
+				<el-button type="success" round @click="ResetTimer" v-if="false">重新計時</el-button>
+				<el-button type="success" round @click="ReStart">重新開始</el-button>
+			  </div>
+		  </el-col>
+		</el-row>
+		<el-col :span="24" v-if="timer != null">
+			  <div>
+				<el-button type="success" round @click="AddCorrectCnt">答對</el-button>
+				<el-button type="success" round @click="AddErrorCnt">放棄</el-button>
+			  </div>
+		  </el-col>
+		</el-row>
+		<el-col :span="24">
+			  <div>
+				計數:
+				總答題數: {{CorrectCnt+ErrorCnt}} / 答對題數: {{CorrectCnt}} / 放棄題數 : {{ErrorCnt}}
+			  </div>
+		  </el-col>
+		</el-row>
+
+		
+	</div>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+	<script src="https://unpkg.com/vue-router"></script>
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script type="text/javascript" src="./Gamelib.js"></script>
+	<script type="text/javascript" src="./Hand_painted_Data.js"></script>
+	
+    
+    
+
+  </body>
+</html>
