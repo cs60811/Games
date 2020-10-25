@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="團康遊戲!">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>DinDonC - 一起來訂東西吧</title>
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>做伙tso-hue - 一起來玩遊戲吧</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 	<!-- 引入样式 -->
 	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -15,6 +18,23 @@
 		text-align: center;
 		font-size: 18pt;
 	}
+	.el-backtop {
+		position: fixed;
+		background-color: #fff;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		color: #409eff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 20px;
+		box-shadow: 0 0 6px rgba(0,0,0,.12);
+		cursor: pointer;
+		z-index: 5;
+		right: 40px; 
+		bottom: 40px;
+	}
 	</style>
     
   </head>
@@ -22,52 +42,150 @@
 
 
     <div id="app" class="container">
-		<el-row>
+	
+		<div id="Game1" v-if="GameTag == 'Game1'">
+			<el-row>
+			  <el-col :span="24">
+				  <div class="align-center">
+					救救菜英文
+				  </div>
+			  </el-col>
+			</el-row>
+			<el-col :span="24">
+				  <div class="align-center" style="font-size: 60pt;width: auto;height: 140px;">
+					{{Topic}}
+				  </div>
+			  </el-col>
+			</el-row>
+			<el-col :span="24">
+				請設定時間 : <el-input v-model="TotalTime" placeholder="请输入内容"></el-input>
+			</el-row>
+			<el-col :span="24">
+				  <div>
+					倒數計時 : {{time}}
+				  </div>
+			  </el-col>
+			</el-row>
+			<el-col :span="24">
+				  <div>
+					<el-button type="success" round @click="StartTimer">開始</el-button>
+					<el-button type="warning" round @click="PauseTimer">暫停</el-button>
+					<el-button type="success" round @click="ResetTimer" v-if="false">重新計時</el-button>
+					<el-button type="primary" round @click="ReStart">重新開始</el-button>
+				  </div>
+			  </el-col>
+			</el-row>
+			<el-col :span="24" v-if="timer != null">
+				  <div>
+					<el-button type="success" round @click="AddCorrectCnt">答對</el-button>
+					<el-button type="danger" round @click="AddErrorCnt">放棄</el-button>
+				  </div>
+			  </el-col>
+			</el-row>
+			<el-col :span="24">
+				  <div>
+					計數:
+					總答題數: {{CorrectCnt+ErrorCnt}} / 答對題數: {{CorrectCnt}} / 放棄題數 : {{ErrorCnt}}
+				  </div>
+			  </el-col>
+			</el-row>
+		</div>
 		
-		  <el-col :span="24">
-			  <div class="align-center">
-				救救菜英文
-			  </div>
-		  </el-col>
-		</el-row>
-		<el-col :span="24">
-			  <div class="align-center" style="font-size: 60pt;width: auto;height: 140px;">
-				{{Topic}}
-			  </div>
-		  </el-col>
-		</el-row>
-		<el-col :span="24">
-			請設定時間 : <el-input v-model="TotalTime" placeholder="请输入内容"></el-input>
-		</el-row>
-		<el-col :span="24">
-			  <div>
-				倒數計時 : {{time}}
-			  </div>
-		  </el-col>
-		</el-row>
-		<el-col :span="24">
-			  <div>
-				<el-button type="success" round @click="StartTimer">開始</el-button>
-				<el-button type="success" round @click="PauseTimer">暫停</el-button>
-				<el-button type="success" round @click="ResetTimer" v-if="false">重新計時</el-button>
-				<el-button type="success" round @click="ReStart">重新開始</el-button>
-			  </div>
-		  </el-col>
-		</el-row>
-		<el-col :span="24" v-if="timer != null">
-			  <div>
-				<el-button type="success" round @click="AddCorrectCnt">答對</el-button>
-				<el-button type="success" round @click="AddErrorCnt">放棄</el-button>
-			  </div>
-		  </el-col>
-		</el-row>
-		<el-col :span="24">
-			  <div>
-				計數:
-				總答題數: {{CorrectCnt+ErrorCnt}} / 答對題數: {{CorrectCnt}} / 放棄題數 : {{ErrorCnt}}
-			  </div>
-		  </el-col>
-		</el-row>
+		<div id="Game2" v-if="GameTag == 'Game2'">
+			<el-row>
+			  <el-col :span="24">
+				  <div class="align-center">
+					支援前線
+				  </div>
+			  </el-col>
+			  
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-table	:data="SupFrontLineTableData"
+								stripe
+								style="width: 100%">
+					
+					<el-table-column  prop="OrderNo"
+									  type="index"
+									  label="序"
+									  width="120">
+					</el-table-column>
+					<el-table-column  prop="ItemName"
+									  label="所需物品"
+									  >
+						<template scope="scope">
+							<el-input size="small" v-model="scope.row.ItemName" placeholder="請輸入內容" @change="handleEdit(scope.$index, scope.row)"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="數量" width="180">
+						<template scope="scope">
+							<el-input size="small" v-model="scope.row.ItemCount" placeholder="請輸入內容" @change="handleEdit(scope.$index, scope.row)"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column  prop="Option"
+									  label="功能"
+									  width="100">
+						<template scope="scope">
+							<el-button icon="el-icon-delete" @click="handleDelete(scope.$index, scope)" size="small" circle></el-button>
+						</template>
+					</el-table-column>
+	
+				  </el-table>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+				需要幾個物品 : <el-input v-model="ItemMax" placeholder="请输入内容"></el-input>
+			  </el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+				物品最大數 : <el-input v-model="ItemCountMax" placeholder="请输入内容"></el-input>
+			  </el-col>
+			</el-row>
+			
+			
+			<el-row>
+				<el-col :span="24">
+				<el-button type="success" round @click="SUPFL_Refalsh">更新題目</el-button>
+			  </el-col>
+			</el-row>
+			
+		</div>
+		
+		<div id="Game3" v-if="GameTag == 'Game3'">
+			<el-row>
+				<el-col :span="24">
+					<div class="align-center">
+						跳跳tempo
+					</div>
+			  </el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+				
+			  </el-col>
+			</el-row>
+			
+			題目 : 
+		</div>
+		
+		<div id="ChangeGame" class="el-backtop el-icon-refresh" @click="SettingDialogFlag=true">
+			
+			
+		</div>
+		
+		<el-dialog title="切換遊戲" :visible.sync="SettingDialogFlag">
+			<el-button round @click="ChangeGame('Game1')">救救菜英文</el-button>
+			<el-button round @click="ChangeGame('Game2')">支援前線</el-button>
+			<el-button round @click="ChangeGame('Game3')">跳跳tempo</el-button>
+			
+		  <div slot="footer" class="dialog-footer">
+			© 2020 - 2021 CakeEasy. All Rights Reserved.
+		  </div>
+		</el-dialog>
+		
 
 		
 	</div>
@@ -77,6 +195,7 @@
 	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 	<script type="text/javascript" src="./Gamelib.js"></script>
 	<script type="text/javascript" src="./Hand_painted_Data.js"></script>
+	<script type="text/javascript" src="./Sup_Front_Line_Data.js"></script>
 	
     
     
