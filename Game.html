@@ -18,6 +18,11 @@
 		text-align: center;
 		font-size: 18pt;
 	}
+	.Topic {
+		font-size: 60pt;
+		width: auto;
+		height: 140px;
+	}
 	.el-backtop {
 		position: fixed;
 		background-color: #fff;
@@ -52,13 +57,13 @@
 			  </el-col>
 			</el-row>
 			<el-col :span="24">
-				  <div class="align-center" style="font-size: 60pt;width: auto;height: 140px;">
-					{{Topic}}
+				  <div class="align-center Topic">
+					{{Game1Obj.Topic}}
 				  </div>
 			  </el-col>
 			</el-row>
 			<el-col :span="24">
-				請設定時間 : <el-input v-model="TotalTime" placeholder="请输入内容"></el-input>
+				請設定時間 : <el-input v-model="Game1Obj.TotalTime" placeholder="请输入内容"></el-input>
 			</el-row>
 			<el-col :span="24">
 				  <div>
@@ -68,24 +73,23 @@
 			</el-row>
 			<el-col :span="24">
 				  <div>
-					<el-button type="success" round @click="StartTimer">開始</el-button>
-					<el-button type="warning" round @click="PauseTimer">暫停</el-button>
-					<el-button type="success" round @click="ResetTimer" v-if="false">重新計時</el-button>
-					<el-button type="primary" round @click="ReStart">重新開始</el-button>
+					<el-button type="success" round @click="Game1.apply(app).StartTimer.apply(app)">開始</el-button>
+					<el-button type="warning" round @click="Pause_Timer.apply(app)">暫停</el-button>
+					<el-button type="primary" round @click="Game1.apply(app).ReStart.apply(app)">重新開始</el-button>
 				  </div>
 			  </el-col>
 			</el-row>
 			<el-col :span="24" v-if="timer != null">
 				  <div>
-					<el-button type="success" round @click="AddCorrectCnt">答對</el-button>
-					<el-button type="danger" round @click="AddErrorCnt">放棄</el-button>
+					<el-button type="success" round @click="Game1.apply(app).AddCorrectCnt.apply(app)">答對</el-button>
+					<el-button type="danger" round @click="Game1.apply(app).AddErrorCnt.apply(app)">放棄</el-button>
 				  </div>
 			  </el-col>
 			</el-row>
 			<el-col :span="24">
 				  <div>
 					計數:
-					總答題數: {{CorrectCnt+ErrorCnt}} / 答對題數: {{CorrectCnt}} / 放棄題數 : {{ErrorCnt}}
+					總答題數: {{Game1Obj.CorrectCnt+Game1Obj.ErrorCnt}} / 答對題數: {{Game1Obj.CorrectCnt}} / 放棄題數 : {{Game1Obj.ErrorCnt}}
 				  </div>
 			  </el-col>
 			</el-row>
@@ -160,26 +164,94 @@
 					<div class="align-center">
 						跳跳tempo
 					</div>
-			  </el-col>
+				</el-col>
 			</el-row>
 			<el-row>
 				<el-col :span="24">
-				
-			  </el-col>
+					<div class="align-center">
+						問題
+					</div>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<div class="align-center Topic">
+						{{Game3Obj.Tempo.Question}}
+					</div>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-table	:data="Game3Obj.Tempo.TableData"
+								stripe
+								style="width: 100%">
+					
+					<el-table-column  prop="OrderNo"
+									  type="index"
+									  label="序"
+									  >
+					</el-table-column>
+					<el-table-column  prop="Topic"
+									  label="題目"
+									  >
+					</el-table-column>
+					<el-table-column prop="Answer"
+									 label="答案" 
+									 >
+						
+					</el-table-column>
+	
+				  </el-table>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-button type="success" round @click="Game3.apply(app).Reflash_Question.apply(app)">更新題目</el-button>
+					<el-button type="success" round @click="Game3.apply(app).ReStartGame3.apply(app)">重新開始</el-button>
+					
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					計時器
+					{{time}}
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-button type="success" round @click="Create_Timer('Positive',10,null,null)">開始(正)</el-button>
+					<el-button type="success" round @click="Create_Timer('Reverse',10,null,null)">開始(反)</el-button>
+					<el-button type="success" round @click="Pause_Timer">暫停</el-button>
+					<el-button type="success" round @click="Reset_Timer">重置</el-button>
+				</el-col>
 			</el-row>
 			
-			題目 : 
+			
 		</div>
 		
 		<div id="ChangeGame" class="el-backtop el-icon-refresh" @click="SettingDialogFlag=true">
-			
-			
 		</div>
 		
-		<el-dialog title="切換遊戲" :visible.sync="SettingDialogFlag">
-			<el-button round @click="ChangeGame('Game1')">救救菜英文</el-button>
+		<div id="FullScreen" class="el-backtop el-icon-full-screen" style="bottom: 90px;" @click="screenfull.toggle()">
+		</div>
+		
+		<el-dialog title="切換遊戲" :visible.sync="SettingDialogFlag" width="90%">
+			<el-row :gutter="20">
+				<el-col :span="6">
+					<el-button round @click="ChangeGame('Game1')">救救菜英文</el-button>
+				</el-col>
+				<el-col  :span="6">
+					<el-button round @click="ChangeGame('Game2')">支援前線</el-button>
+				</el-col>
+				<el-col :span="6">
+					<el-button round @click="ChangeGame('Game3')">跳跳tempo</el-button>
+				</el-col>
+				<el-col :span="6">
+				</el-col>
+			</el-row>
+			<!--<el-button round @click="ChangeGame('Game1')">救救菜英文</el-button>
 			<el-button round @click="ChangeGame('Game2')">支援前線</el-button>
-			<el-button round @click="ChangeGame('Game3')">跳跳tempo</el-button>
+			<el-button round @click="ChangeGame('Game3')">跳跳tempo</el-button>-->
 			
 		  <div slot="footer" class="dialog-footer">
 			© 2020 - 2021 CakeEasy. All Rights Reserved.
@@ -193,9 +265,11 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
 	<script src="https://unpkg.com/vue-router"></script>
 	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/screenfull@5.0.2/dist/screenfull.min.js"></script>
 	<script type="text/javascript" src="./Gamelib.js"></script>
 	<script type="text/javascript" src="./Hand_painted_Data.js"></script>
 	<script type="text/javascript" src="./Sup_Front_Line_Data.js"></script>
+	<script type="text/javascript" src="./Tempo_Data.js"></script>
 	
     
     
