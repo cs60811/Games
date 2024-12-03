@@ -113,7 +113,7 @@
 					<el-table-column  prop="OrderNo"
 									  type="index"
 									  label="序"
-									  width="120">
+									  width="20">
 					</el-table-column>
 					<el-table-column  prop="ItemName"
 									  label="所需物品"
@@ -122,7 +122,7 @@
 							<el-input size="small" v-model="scope.row.ItemName" placeholder="請輸入內容" @change="handleEdit(scope.$index, scope.row)"></el-input>
 						</template>
 					</el-table-column>
-					<el-table-column label="數量" width="180">
+					<el-table-column label="數量" width="100">
 						<template scope="scope">
 							<el-input size="small" v-model="scope.row.ItemCount" placeholder="請輸入內容" @change="handleEdit(scope.$index, scope.row)"></el-input>
 						</template>
@@ -263,7 +263,7 @@
 	</div>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
-	<script src="https://unpkg.com/vue-router"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.3/dist/vue-router.min.js"></script>
 	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/screenfull@5.0.2/dist/screenfull.min.js"></script>
 	<script type="text/javascript" src="./Gamelib.js"></script>
